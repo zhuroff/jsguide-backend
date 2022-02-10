@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import userService from '~/services/user.service'
 
 export class UserController {
-  static async registration(req: Request, res: Response, next: any) {
+  static async registration(req: Request, res: Response, next: (error: unknown) => void) {
     try {
       const { login, password } = req.body
       const userData = await userService.registration(login, password)
@@ -20,7 +20,7 @@ export class UserController {
 
       res.status(201).json({ message: 'Вы успешно зарегистрировались' })
     } catch (error) {
-      res.status(500).json(error)
+      next(error)
     }
   }
 
@@ -28,7 +28,7 @@ export class UserController {
     try {
       
     } catch (error) {
-      
+      next(error)
     }
   }
 
@@ -36,7 +36,7 @@ export class UserController {
     try {
       
     } catch (error) {
-      
+      next(error)
     }
   }
 }

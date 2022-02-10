@@ -12,6 +12,7 @@
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUncheckedIndexedAccess": true,
+    "strictPropertyInitialization": false,
     "noPropertyAccessFromIndexSignature": true,
     "baseUrl": ".",
     "paths": {
