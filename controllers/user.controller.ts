@@ -26,7 +26,7 @@ export class UserController {
         }
       )
 
-      res.status(201).json({ message: 'Вы успешно зарегистрировались' })
+      res.status(201).json(userData)
     } catch (error) {
       next(error)
     }
@@ -47,7 +47,7 @@ export class UserController {
         }
       )
 
-      res.status(201).json({ message: 'Вы успешно авторизовались', user: userData })
+      res.json(userData)
     } catch (error) {
       next(error)
     }
@@ -55,7 +55,11 @@ export class UserController {
 
   static async logout(req: Request, res: Response, next: any) {
     try {
-      
+      const { refreshToken } = req.cookies
+      const token = userService.logout(refreshToken)
+      res.clearCookie('refreshToken')
+
+      return res.json(token)
     } catch (error) {
       next(error)
     }

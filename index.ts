@@ -13,14 +13,19 @@ import { MiddlewareErrors } from '~/middleware/middleware.errors'
 dotenv.config()
 
 const app = express()
-const PORT = 3000
+const PORT = 8000
 
 mongoose.connect(process.env['MONGO_URI'] as string)
   .then(() => console.log('MongoDB connected'))
   .catch((error) => console.log(error))
 
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  origin: process.env['NODE_ENV'] === 'development'
+    ? process.env['CLIENT_URL_DEV']
+    : process.env['CLIENT_URL_PROD']
+}))
 app.use(express.urlencoded({ extended: true }))
 app.use(json())
 app.use('/api/user', userRoutes)
