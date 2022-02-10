@@ -32,7 +32,7 @@ export class UserController {
     }
   }
 
-  static async login(req: Request, res: Response, next: any) {
+  static async login(req: Request, res: Response, next: (error: unknown) => void) {
     try {
       const { login, password } = req.body
       const userData = await userService.login(login, password)
@@ -53,13 +53,34 @@ export class UserController {
     }
   }
 
-  static async logout(req: Request, res: Response, next: any) {
+  static async logout(req: Request, res: Response, next: (error: unknown) => void) {
     try {
       const { refreshToken } = req.cookies
       const token = userService.logout(refreshToken)
       res.clearCookie('refreshToken')
 
       return res.json(token)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async refresh(req: Request, res: Response, next: (error: unknown) => void) {
+    try {
+      const { refreshToken } = req.cookies
+      const userData = await userService.refresh(refreshToken)
+
+      res.cookie(
+        'refreshToken',
+        userData?.refreshToken,
+        {
+          maxAge: 30 * 24 + 60 * 60 * 1000,
+          httpOnly: true ,
+          secure: process.env['NODE_ENV'] === 'production'
+        }
+      )
+
+      res.json(userData)
     } catch (error) {
       next(error)
     }
