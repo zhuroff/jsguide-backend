@@ -1,10 +1,18 @@
 import 'module-alias/register'
 import { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
+import { ApiError } from '~/exceptions/api-errors'
 import userService from '~/services/user.service'
 
 export class UserController {
   static async registration(req: Request, res: Response, next: (error: unknown) => void) {
     try {
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequest('Ошибка валидации', errors.array()))
+      }
+
       const { login, password } = req.body
       const userData = await userService.registration(login, password)
       

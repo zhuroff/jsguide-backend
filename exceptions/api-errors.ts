@@ -1,20 +1,22 @@
+import { ValidationError } from 'express-validator'
+
 export type ApiErrorProps = {
   status: number
-  errors: string[]
+  errors: ValidationError[]
 }
 
 export class ApiError extends Error implements ApiErrorProps {
   status: number
   message: string
-  errors: any
+  errors: ValidationError[]
 
   constructor(
     status: number,
     message: string,
-    errors: string[] = []
+    errors: ValidationError[] = []
   ) {
     super(message)
-    
+
     this.status = status
     this.errors = errors
     this.message = message
@@ -24,7 +26,7 @@ export class ApiError extends Error implements ApiErrorProps {
     return new ApiError(401, 'Пользователь не авторизован')
   }
 
-  static BadRequest(message: string, errors?: string[]) {
+  static BadRequest(message: string, errors?: ValidationError[]) {
     return new ApiError(400, message, errors)
   }
 }
