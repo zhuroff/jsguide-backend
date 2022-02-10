@@ -34,7 +34,20 @@ export class UserController {
 
   static async login(req: Request, res: Response, next: any) {
     try {
-      
+      const { login, password } = req.body
+      const userData = await userService.login(login, password)
+
+      res.cookie(
+        'refreshToken',
+        userData?.refreshToken,
+        {
+          maxAge: 30 * 24 + 60 * 60 * 1000,
+          httpOnly: true ,
+          secure: process.env['NODE_ENV'] === 'production'
+        }
+      )
+
+      res.status(201).json({ message: 'Вы успешно авторизовались', user: userData })
     } catch (error) {
       next(error)
     }
