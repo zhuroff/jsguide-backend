@@ -27,9 +27,18 @@ const article = async (req: Request, res: Response) => {
   }
 }
 
+const update = async (req: Request, res: Response) => {
+  try {
+    res.json({ message: 'Fake update' })
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
+
 const controller = {
   headings,
-  article
+  article,
+  update
 }
 
 export default controller
