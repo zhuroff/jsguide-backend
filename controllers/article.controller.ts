@@ -29,7 +29,15 @@ const article = async (req: Request, res: Response) => {
 
 const update = async (req: Request, res: Response) => {
   try {
-    res.json({ message: 'Fake update' })
+    const query = { _id: req.params['id'] }
+    const $set = {
+      title: req.body.title,
+      article: req.body.article,
+      links: req.body.links
+    }
+
+    await Article.findOneAndUpdate(query, { $set }, { new: true })
+    res.json({ message: 'Article successfully updated' })
   } catch (error) {
     res.status(500).json(error)
   }
