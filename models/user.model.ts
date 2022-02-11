@@ -3,6 +3,7 @@ import { model, Schema, Types } from 'mongoose'
 export interface UserModel {
   login: string
   password: string
+  isAdmin?: boolean
 }
 
 export interface IUser extends UserModel {
@@ -19,6 +20,12 @@ const UserSchema: Schema<UserModel> = new Schema({
   password: {
     type: String,
     required: true
+  },
+
+  isAdmin: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
