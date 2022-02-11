@@ -3,7 +3,7 @@ import { model, Schema, Types } from 'mongoose'
 export interface UserModel {
   login: string
   password: string
-  isAdmin?: boolean
+  isAdmin: boolean
 }
 
 export interface IUser extends UserModel {
