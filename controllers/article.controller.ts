@@ -1,52 +1,46 @@
 import 'module-alias/register'
 import { Request, Response } from 'express'
-import { Article } from '../models/article.model'
+import { ApiError } from '~/exceptions/api-errors'
+import articleService from '~/services/article.service'
 
-const headings = async (req: Request, res: Response) => {
-  const options = {
-    page: req.body.page,
-    limit: req.body.limit,
-    sort: req.body.sort,
-    select: { title: true }
+export class ArticleController {
+  static async headings(req: Request, res: Response, next: (error: unknown) => void) {
+    const { page, limit, sort } = req.body
+
+    try {
+      const headings = await articleService.articles({ page, limit, sort, select: { title: true } })
+      return res.json(headings)
+    } catch (error) {
+      next(error)
+    }
   }
 
-  try {
-    const response = await Article.paginate({}, options)
-    res.json(response)
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-
-const article = async (req: Request, res: Response) => {
-  try {
-    const response = await Article.findById(req.params['id'])
-    res.json(response)
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}
-
-const update = async (req: Request, res: Response) => {
-  try {
-    const query = { _id: req.params['id'] }
-    const $set = {
-      title: req.body.title,
-      article: req.body.article,
-      links: req.body.links
+  static async article(req: Request, res: Response, next: (error: unknown) => void) {
+    if (!req.params['id']) {
+      return next(ApiError.BadRequest('Не указан id запроса'))
     }
 
-    await Article.findOneAndUpdate(query, { $set }, { new: true })
-    res.json({ message: 'Article successfully updated' })
-  } catch (error) {
-    res.status(500).json(error)
+    try {
+      const article = await articleService.article(req.params['id'])
+      return res.json(article)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async update(req: Request, res: Response, next: (error: unknown) => void) {
+    if (!req.params['id']) {
+      return next(ApiError.BadRequest('Не указан id запроса'))
+    }
+
+    const { title, article, links } = req.body
+    const query = { _id: req.params['id'] }
+
+    try {
+      await articleService.update(query, { title, article, links })
+      res.json({ message: 'Изменения сохранены' })
+    } catch (error) {
+      next(error)
+    }
   }
 }
-
-const controller = {
-  headings,
-  article,
-  update
-}
-
-export default controller

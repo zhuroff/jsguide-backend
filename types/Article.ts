@@ -1,6 +1,6 @@
 import { Document, PaginateModel } from 'mongoose'
 
-interface ArticleLinks {
+type ArticleLinks = {
   title: string
   url: string
 }
@@ -15,6 +15,7 @@ interface ArticleModel extends Document {
 interface IArticle<T extends Document> extends PaginateModel<T> {}
 
 export {
+  ArticleLinks,
   ArticleModel,
   IArticle
 }

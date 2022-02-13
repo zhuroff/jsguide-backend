@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import controller from '../controllers/article.controller'
+import { ArticleController } from '~/controllers/article.controller'
 import { MiddlewareAuth } from '~/middleware/middleware.auth'
 
 const router = Router()
 
-router.post('/', controller.headings)
-router.get('/:id', controller.article)
-router.patch('/:id', MiddlewareAuth, controller.update)
+router.post('/', ArticleController.headings)
+router.get('/:id', ArticleController.article)
+router.patch('/:id', MiddlewareAuth, ArticleController.update)
 
 export default router
