@@ -7,8 +7,9 @@ type ArticleLinks = {
 
 interface ArticleModel extends Document {
   title: string
-  dateCreated: Date,
+  dateCreated: Date
   article: string
+  isDraft: boolean
   links: ArticleLinks[]
 }
 

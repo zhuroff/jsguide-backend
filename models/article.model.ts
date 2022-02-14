@@ -5,7 +5,8 @@ import { ArticleModel, IArticle } from '~/types/Article'
 const ArticleSchema: Schema<ArticleModel> = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
 
   dateCreated: {
@@ -16,6 +17,12 @@ const ArticleSchema: Schema<ArticleModel> = new Schema({
   article: {
     type: String,
     required: true
+  },
+
+  isDraft: {
+    type: Boolean,
+    required: false,
+    default: true
   },
 
   links: [
