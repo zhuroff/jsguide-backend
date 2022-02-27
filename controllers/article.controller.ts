@@ -6,9 +6,10 @@ import articleService from '~/services/article.service'
 export class ArticleController {
   static async headings(req: Request, res: Response, next: (error: unknown) => void) {
     const { isDraft, page, limit, sort } = req.body
+    const select = { title: true, children: true, parent: true } as const
 
     try {
-      const headings = await articleService.articles({ isDraft, page, limit, sort, select: { title: true } })
+      const headings = await articleService.articles({ isDraft, page, limit, sort, select })
       return res.json(headings)
     } catch (error) {
       next(error)
@@ -16,8 +17,10 @@ export class ArticleController {
   }
 
   static async create(req: Request, res: Response, next: (error: unknown) => void) {
+    const { id } = req.body
+    
     try {
-      const article = await articleService.create()
+      const article = await articleService.create({ id })
       return res.json(article)
     } catch (error) {
       console.log(error)

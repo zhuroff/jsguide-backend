@@ -1,4 +1,4 @@
-import { Document, PaginateModel } from 'mongoose'
+import { Document, PaginateModel, Types } from 'mongoose'
 
 type ArticleLinks = {
   title: string
@@ -10,6 +10,8 @@ interface ArticleModel extends Document {
   dateCreated: Date
   article: string
   isDraft: boolean
+  parent?: Types.ObjectId,
+  children?: Types.ObjectId[]
   links: ArticleLinks[]
 }
 

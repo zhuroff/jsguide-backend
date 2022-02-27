@@ -23,15 +23,28 @@ class ArticleService {
     return dbArticles
   }
 
-  async create() {
-    const article = new Article({ title: 'Заголовок статьи...', article: 'Текст статьи...' })
+  async create({ id }: { id: string | null }) {
+    const article = new Article({
+      title: 'Заголовок статьи...',
+      article: 'Текст статьи...',
+      parent: id
+    })
     const dbArticle = await article.save()
+
+    if (id) {
+      await Article.findOneAndUpdate(
+        { _id: id },
+        { $push: { children: article._id } },
+        { new: true }
+      )
+    }
+
     return dbArticle
   }
 
   async article(id: string) {
-    const dbArticle = await Article.findById(id)
-    return dbArticle
+    return await Article.findById(id)
+      .populate({ path: 'children', select: ['title'] })
   }
 
   async update(query: { _id: string }, $set: ArticleProps) {

@@ -25,6 +25,20 @@ const ArticleSchema: Schema<ArticleModel> = new Schema({
     default: true
   },
 
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: 'articles',
+    required: false
+  },
+
+  children: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'articles',
+      required: false
+    }
+  ],
+
   links: [
     {
       title: {
